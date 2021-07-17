@@ -11,39 +11,37 @@ export class ProductController {
     return this.ProductService.allProduct();
   }
 
-  @Get(':id')
+  @Get('single/:id')
   single(@Param('id') productId: string) {
     return this.ProductService.singleProduct(productId);
   }
 
   @Post('create')
-  create(
+  async create(
     @Body('title') title: string,
     @Body('description') description: string,
     @Body('price') price: number,
   ) {
-    const prodId = this.ProductService.createProduct(title, description, price);
-    return { 'data': {id: prodId} };
+    const prod = await this.ProductService.createProduct(title, description, price);
+    return { data: prod };
   }
 
-  @Patch(':id')
-  update(
+  @Patch('update/:id')
+  async update(
     @Param('id') id: string,
     @Body('title') title: string,
     @Body('description') description: string,
     @Body('price') price: number,
   ) {
-    const prod = this.ProductService.updateProduct(id, title, description, price);
-    if (prod) {
-      return {'data': 'Product updated'};
-    }
+    const prod = await this.ProductService.updateProduct(id, title, description, price);
+    return { data: prod };
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   delete(@Param('id') id: string) {
     const deleteProd = this.ProductService.deleteProduct(id);
     if (deleteProd) {
-      return {'message': 'Product has been deleted'}
+      return { message: 'Product has been deleted' };
     }
   }
 }
